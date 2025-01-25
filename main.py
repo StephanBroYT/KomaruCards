@@ -51,7 +51,7 @@ def komar(message):
 @bot.message_handler(commands=["cards"])
 def cards(message):
     markup = methods.generate_markup_cards(message)
-    bot.send_message(message.chat.id, f"Выберите карточку:", reply_markup=markup)
+    bot.send_message(message.chat.id, f"✨ Выберите карточку:", reply_markup=markup)
 
 @bot.message_handler(commands=["balance"])
 def balance(message):
@@ -67,7 +67,7 @@ def text(message):
 
     if message.text.lower() == "карты":
         markup = methods.generate_markup_cards(message)
-        bot.send_message(message.chat.id, f"Выберите карточку:", reply_markup=markup)
+        bot.send_message(message.chat.id, f"✨ Выберите карточку:", reply_markup=markup)
 
     if message.text.lower() == "баланс":
         bot.send_message(
@@ -107,7 +107,7 @@ def callback_message(callback):
             chat_id=callback.message.chat.id,
             media=telebot.types.InputMediaPhoto(
                 media=open(img, "rb"),
-                caption=f"Карточка: {name}\nРедкость: {rare}\nСтоимость: {money} монет",
+                caption=f"{name}\n💎 Редкость • {rare}\n💰 Стоимость • {money} монет",
             ),
             message_id=callback.message.message_id,
             reply_markup=markup,

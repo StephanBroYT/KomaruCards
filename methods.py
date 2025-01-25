@@ -175,7 +175,7 @@ def generate_komar(message, bot):
     try:
         can_use, time_left = check_cooldown(message.from_user.id)
         if not can_use:
-            bot.reply_to(message, f"Подождите {time_left} до следующего использования команды!")
+            bot.reply_to(message, f"🕖 Вы не смогли найти КОМАРА, попробуйте через {time_left}")
             return
 
         komar_id = random.choice(list(get_cards()))
@@ -197,14 +197,14 @@ def generate_komar(message, bot):
             bot.send_photo(
             chat_id=message.chat.id,
             photo=open(img, "rb"),
-            caption=f"Вам *повторно* выпала карточка {name} \nРедкость: {rare} \nВам добавлено {money} монет \n||ID: {komar_id}||",
+            caption=f"🚀 Вам *повторно* выпала карточка {name} \n💎 Редкость • {rare} \n💰 Вам добавлено {money} монет \n||ID: {komar_id}||",
             parse_mode="MarkdownV2",
         )
         else:
             bot.send_photo(
             chat_id=message.chat.id,
             photo=open(img, "rb"),
-            caption=f"Вам выпала карточка {name} \nРедкость: {rare} \nВам добавлено {money} монет \n||ID: {komar_id}||",
+            caption=f"🚀 Вам выпала карточка {name} \n💎 Редкость • {rare} \n💰 Вам добавлено {money} монет \n||ID: {komar_id}||",
             parse_mode="MarkdownV2",
         )
 
