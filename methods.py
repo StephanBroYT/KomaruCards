@@ -33,18 +33,22 @@ def add_card_to_user(user_id: int, card_id: int) -> bool:
         conn = sqlite3.connect("komaru.db")
         c = conn.cursor()
         
+        money = get_card_by_id(card_id).get("money", 0)
         # Проверяем существует ли пользователь
-        c.execute("INSERT OR IGNORE INTO users (user_id, money) VALUES (?, 0)", (user_id,))
+        c.execute("INSERT OR IGNORE INTO users (user_id, money) VALUES (?, ?)", (user_id, money))
         
         # Добавляем карточку, игнорируем если уже существует
         c.execute("INSERT OR IGNORE INTO user_cards (user_id, card_id) VALUES (?, ?)", 
                  (user_id, card_id))
         
+        # Добавляем деньги в любом случае
+        c.execute("UPDATE users SET money = money + ? WHERE user_id = ?", (money, user_id))
+        
         conn.commit()
         conn.close()
         return True
     except Exception as e:
-        print(f"Ошибка при добавлении карточки: {e}")
+        print(f"Error adding card: {e}")
         return False
 
 def get_user_cards(user_id: int) -> list:
@@ -56,6 +60,28 @@ def get_user_cards(user_id: int) -> list:
             return [card[0] for card in c.fetchall()]
     except Exception as e:
         print(f"Ошибка при получении карточек: {e}")
+        return []
+
+def get_user_money(user_id: int) -> list:
+    """Возвращает список ID карточек пользователя"""
+    try:
+        with sqlite3.connect("komaru.db") as conn:
+            c = conn.cursor()
+            c.execute("SELECT money FROM users WHERE user_id = ?", (user_id,))
+            return [card[0] for card in c.fetchall()]
+    except Exception as e:
+        print(f"Ошибка при получении монет: {e}")
+        return []
+
+def get_users_id() -> list:
+    """Возвращает список ID пользователей"""
+    try:
+        with sqlite3.connect("komaru.db") as conn:
+            c = conn.cursor()
+            c.execute("SELECT user_id FROM users")
+            return [card[0] for card in c.fetchall()]
+    except Exception as e:
+        print(f"Ошибка при получении ids: {e}")
         return []
     
 def get_cards() -> list:
