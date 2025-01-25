@@ -1,5 +1,6 @@
 import sqlite3
 import json
+import telebot
 
 def setup_database():
     conn = sqlite3.connect("komaru.db")
@@ -103,3 +104,16 @@ def get_card_by_id(card_id: str) -> dict:
     except Exception as e:
         print(f"Ошибка при получении карточки: {e}")
         return {}
+
+def generate_markup_cards(message):
+    markup = telebot.types.InlineKeyboardMarkup()
+    
+    for i in get_user_cards(message.from_user.id):
+        card = get_card_by_id(i)
+        markup.add(
+            telebot.types.InlineKeyboardButton(
+                text=f"{card.get('name')} {card.get('rare')}", 
+                callback_data=f"card_{i}"  # callback_data нужен для обработки нажатия
+            )
+        )
+    return markup
