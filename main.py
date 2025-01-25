@@ -1,5 +1,9 @@
 ME_ID = 1127025574
 import telebot, methods, logging
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 komars = ["комар", "комару", "komap", "komaru"]
 logging.basicConfig(
@@ -12,7 +16,7 @@ logging.basicConfig(
     ],
 )
 
-bot = telebot.TeleBot("7856679795:AAELjKK6_1461_0lzSp8eglvoXVFDBAWRDs")
+bot = telebot.TeleBot(os.getenv("TOKEN"))
 
 
 @bot.message_handler(commands=["start"])
@@ -44,21 +48,25 @@ def anoncment(message):
                 message.from_user.id, f"Ошибка при отправке сообщения {e} \nЮзер {user}"
             )
 
+
 @bot.message_handler(commands=["komar"])
 def komar(message):
     methods.generate_komar(message, bot)
+
 
 @bot.message_handler(commands=["cards"])
 def cards(message):
     markup = methods.generate_markup_cards(message)
     bot.send_message(message.chat.id, f"✨ Выберите карточку:", reply_markup=markup)
 
+
 @bot.message_handler(commands=["balance"])
 def balance(message):
     bot.send_message(
-            message.chat.id,
-            f"Ваши монеты: {methods.get_user_money(message.from_user.id)[0]}",
-        )
+        message.chat.id,
+        f"Ваши монеты: {methods.get_user_money(message.from_user.id)[0]}",
+    )
+
 
 @bot.message_handler(content_types=["text"])
 def text(message):
